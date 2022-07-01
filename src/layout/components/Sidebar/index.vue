@@ -12,6 +12,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
+        <el-menu-item><h2>加密流量分析系统</h2></el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>

@@ -51,8 +51,55 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '总览', icon: 'dashboard' }
     }]
+  },
+
+  // 数据集
+  {
+    path: '/dataset',
+    component: Layout,
+    redirect: '/dataset/length-sequnce',
+    name: 'dataset',
+    meta: { title: '数据集', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'length-sequnce',
+        name: 'length-sequnce',
+        component: () => import('@/views/dataset/length_seq'),
+        meta: { title: '长度序列数据', icon: 'table' }
+      },
+      {
+        path: 'pcap',
+        name: 'Pcap原数据',
+        component: () => import('@/views/dataset/pcap'),
+        meta: { title: 'Pcap数据', icon: 'table' }
+      }
+    ]
+  },
+
+  // 模型
+  {
+    path: '/model',
+    component: Layout,
+    redirect: '/model/application-classify',
+    name: 'model',
+    meta: { title: '模型', icon: 'tree' },
+    children: [
+      {
+        path: 'application-classify',
+        name: 'application-classify',
+        component: () => import('@/views/model/app_classify'),
+        meta: { title: '应用分类模型', icon: 'eye-open' }
+      },
+      {
+        path: 'show-result',
+        name: 'show-result',
+        hidden: true,
+        component: () => import('@/views/model/show_result'),
+        meta: { title: '分类结果', icon: 'eye-open' }
+      },
+    ]
   },
 
   {
