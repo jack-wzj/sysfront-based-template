@@ -84,7 +84,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rootdir: "/pcapDir",
+      rootdir: "/dataset/Pcap",
       target_proto: null,
       pcaps: [],
       checkedPcaps: [],
@@ -166,7 +166,7 @@ export default {
       let index = this.rootdir.indexOf("/", 1) + 1;
       let tmp_dir = this.rootdir.substring(index);
       let target_proto = this.target_proto;
-
+      
       console.log(pcap_names, tmp_dir, target_proto);
       // post request
       let params = new FormData();

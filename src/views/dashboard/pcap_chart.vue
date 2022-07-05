@@ -11,11 +11,11 @@ export default {
   props: {
     className: {
       type: String,
-      default: "chart",
+      default: "pcapChart",
     },
     id: {
       type: String,
-      default: "chart",
+      default: "pcapChart",
     },
     width: {
       type: String,
@@ -29,16 +29,15 @@ export default {
   data() {
     return {
       files: null,
-      dataNum: [],
-      dataType: [],
-      chart: null,
+      dataSize: [],
+      pcapChart: null,
     };
   },
 
   watch: {
-    dataNum: {
+    dataSize: {
       handler(newVal) {
-        this.dataNum = newVal;
+        this.dataSize = newVal;
         this.initChart();
       },
       deep: true,
@@ -51,44 +50,44 @@ export default {
   },
 
   beforeDestroy() {
-    if (!this.chart) {
+    if (!this.pcapChart) {
       return;
     }
-    this.chart.dispose();
-    this.chart = null;
+    this.pcapChart.dispose();
+    this.pcapChart = null;
   },
 
   methods: {
     calSize(val) {
       // 根据files名称统计数据
       let data = {};
-      // console.log("files:", this.files);
+    //   console.log("files:", this.files);
       this.files.forEach((file) => {
-        let type_name =
-          ["http", "tls", "tcp"].indexOf(file.name.split("_")[0]) === -1
-            ? "other"
-            : file.name.split("_")[0];
-        if (data[type_name]) {
-          data[type_name]++;
+        let type_name = file.name;
+        if (file.size.indexOf("MB") > 0) {
+          data[type_name] = parseFloat(file.size.split("\t")) * 1024;
+        } else if (file.size.indexOf("GB") > 0) {
+          data[type_name] = parseFloat(file.size.split("\t")) * 1024 * 1024;
         } else {
-          data[type_name] = 1;
+          data[type_name] = parseFloat(file.size.split("\t"));
         }
       });
-      
-      this.dataNum = [];
+
+      this.dataSize = [];
       for (let key in data) {
-        this.dataNum.push({
-          name: key,
+        this.dataSize.push({
           value: data[key],
+          name: key,
         });
       }
-      // console.log("dataNum:", this.dataNum);
+    //   console.log("dataSize:", this.dataSize);
     },
+
     getData() {
       this.$axios
         .get("http://211.65.197.130:8099/findAllFile", {
           params: {
-            root: "/dataset/Length-Sequnce",
+            root: "/dataset/Pcap",
           },
         })
         .then((resp) => {
@@ -104,41 +103,28 @@ export default {
           console.log(error);
         });
     },
+    
     initChart() {
-      this.chart = echarts.init(document.getElementById(this.id));
+      this.pcapChart = echarts.init(document.getElementById(this.id));
       var options = {
-        dataset: {
-          source: this.dataNum,
-        },
-        xAxis: {
-          type: "category",
-        },
-        yAxis: {},
+        // dataset: {
+        //   source: this.dataSize,
+        // },
         series: [
           {
-            type: "bar",
-            itemStyle: {
-            normal: {
-              color: 'rgba(0,191,183,1)',
-              barBorderRadius: 0,
-              label: {
-                show: true,
-                position: 'top',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
-              }
-            }
-            },
+            type: "pie",
+            // radius: "70%",
+            data:this.dataSize,
+            // roseType: 'angle',
           },
         ],
       };
-      this.chart.setOption(options);
+      this.pcapChart.setOption(options);
     },
   },
 };
 
 // window.addEventListener("resize",function() {
-//         this.chart.resize();
+//         this.pcapChart.resize();
 // });
 </script>

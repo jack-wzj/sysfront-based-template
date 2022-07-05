@@ -6,7 +6,7 @@
           <div slot="header" class="clearfix">
             <span>应用分类</span>
           </div>
-          
+
           <el-form label-width="70px" class="demo-form-inline">
             <el-row>
               <el-form-item label="模型">
@@ -142,7 +142,7 @@ export default {
       this.$axios
         .get("http://211.65.197.130:8099/findAllFile", {
           params: {
-            root: "/dataset",
+            root: "/dataset/Length-Sequnce",
           },
         })
         .then((resp) => {
