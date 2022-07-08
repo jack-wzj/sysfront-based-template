@@ -55,7 +55,12 @@
         </el-card>
       </el-col>
       <el-col :span="12" >
-        <el-card style="height:330px" shadow="hover"></el-card>
+        <el-card style="height:330px" shadow="hover" :body-style="{ padding: '0px' }">
+          <!-- <el-image v-if="select_model === 'LS-LSTM'" :fit='fill' :src="require('@/assets/LS-LSTM.png')"></el-image> -->
+          <img v-if="select_model === 'LS-LSTM'" :src="require('@/assets/LS-LSTM.png')" />
+          <img v-else-if="select_model === 'LS-CapsNet'" :src="require('@/assets/LS_CapsNet.png')" />
+          <img v-else-if="select_model === 'Fs-Net'" :src="require('@/assets/Fs-Net.jpg')" />
+      </el-card>
       </el-col>
     </el-row>
 
@@ -77,6 +82,14 @@
 
 <script>
 export default {
+  props:{
+    'select_model':String,
+  },
+  watch:{
+    'params.model':function(val){
+      this.select_model = val;
+    }
+  },
   mounted() {
     window.Vue = this;
     this.loadDatasets();
@@ -98,9 +111,9 @@ export default {
       },
       Infos: {
         models: [
-          { name: "LS-LSTM", info: "这里是LSTM的介绍" },
-          { name: "LS-CapsNet", info: "这里是CapsNet的介绍" },
-          { name: "FS-Net", info: "这里是fsNet的介绍" },
+          { name: "LS-LSTM", info: "将递归神经网络应用于加密流量分类问题，并提出了流序列网络（FS-Net）。FS-Net 是一种端到端的分类模型，可以从原始流中学习代表性特征，然后将它们分类在一个统一的框架中。此外，采用了多层编码器-解码器结构，可以深入挖掘流的潜在序列特征，并导入可以增强特征有效性的重构机制。" },
+          { name: "LS-CapsNet", info: "考虑了加密网络协议栈之间的差异，并在多协议环境中提出了一种基于复合深度学习的方法，该方法使用滑动多协议数据单元（multiPDU）长度序列作为特征，充分利用多协议数据单元长度中的马尔可夫属性排序并保持与 TLS-1.3 环境的适用性。" },
+          { name: "Fs-Net", info: "与LS-CapsNet相比，基于长度敏感长短期记忆网络模型（LS-LSTM），但需要N-gram层的输出对齐。因此，它更适合高速网络环境下的全流量低延迟快速分析和长期采集场景。" },
         ],
         datatypes: [{ name: "tcp" }, { name: "tls" }, { name: "http" }],
       },
@@ -167,5 +180,10 @@ export default {
   align-self: center;
   align-content: center;
   /* width: 1000px; */
+}
+img {
+  max-width: 100%;
+  /* max-height: 100%; */
+  vertical-align: middle;
 }
 </style>

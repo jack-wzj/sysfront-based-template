@@ -12,7 +12,7 @@
         border
         style="width: 100%"
         max_height="450"
-        :default-sort="{ prop: 'id', order: 'descending' }"
+        :default-sort="{ prop: 'time', order: 'descending' }"
       >
         <el-table-column align="center" width="130px" prop="name" label="标签">
           <template slot-scope="scope">
@@ -30,21 +30,21 @@
             <el-tag type="info" v-else>Else</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="name, dir" label="文件名">
+        <el-table-column align="center" prop="name, dir" label="文件名" sortable>
           <template slot-scope="scope">
             <el-link v-if="scope.row.dir===true" @click="jumpto(scope.row.name)">{{ scope.row.name }}</el-link>
             <span v-else>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="time" label="更新时间">
+        <el-table-column align="center" prop="time" label="更新时间" sortable>
           <template slot-scope="scope">
             <i class="el-icon-time" />
             <span>{{ scope.row.time }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="size" label="文件大小">
+        <el-table-column align="center" prop="size" label="文件大小" sortable :sort-method="sortMethod">
         </el-table-column>
-        <el-table-column align="center" prop="id" label="操作">
+        <el-table-column align="center" prop="id" label="操作" width="130">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="downFile(scope.row)">下载</el-button>
           </template>
@@ -52,13 +52,6 @@
       </el-table>
     </el-row>
     <el-row>
-      <!-- <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-size="pagesize"
-        :total="files.length"
-      >
-      </el-pagination> -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -94,8 +87,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -180,8 +171,12 @@ export default {
             return;
           }
           const blob = new Blob([content]);
-          const fileName = row.name; //替换文件名
-          // const fileName = "fileName"
+          
+          let fileName = null; //替换文件名
+          if (row.name.split(".").length > 1)
+            fileName = row.name;
+          else
+            fileName = row.name + ".zip";
           if ("download" in document.createElement("a")) {
             // 非IE下载
             const elink = document.createElement("a");
@@ -229,7 +224,7 @@ export default {
       return instance;
     },
     downClose() {
-      //中断下载
+      //中断下载，暂时好像有bug
       this.$confirm(
         "点击关闭后将中断下载，是否确定关闭？",
         this.$t("button.tip"),
@@ -247,6 +242,26 @@ export default {
           //取消--什么都不做
         });
     },
+    // 文件大小单位换算并排序
+    sortMethod(a, b) {
+        let aa = null;
+        let bb = null;
+        if (a.size.indexOf("MB") > 0) {
+          aa = parseFloat(a.size.split("\t")) * 1024;
+        } else if (a.size.indexOf("GB") > 0) {
+          aa = parseFloat(a.size.split("\t")) * 1024 * 1024;
+        } else {
+          aa = parseFloat(a.size.split("\t"));
+        }
+        if (b.size.indexOf("MB") > 0) {
+          bb = parseFloat(b.size.split("\t")) * 1024;
+        } else if (b.size.indexOf("GB") > 0) {
+          bb = parseFloat(b.size.split("\t")) * 1024 * 1024;
+        } else {
+          bb = parseFloat(b.size.split("\t"));
+        }
+        return aa - bb;
+      }
   },
 };
 </script>

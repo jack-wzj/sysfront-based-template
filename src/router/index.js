@@ -107,6 +107,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
+    hidden: true,
     meta: { title: 'Example', icon: 'el-icon-s-help' },
     children: [
       {
@@ -126,6 +127,7 @@ export const constantRoutes = [
 
   {
     path: '/form',
+    hidden: true,
     component: Layout,
     children: [
       {
@@ -139,6 +141,7 @@ export const constantRoutes = [
 
   {
     path: '/nested',
+    hidden: true,
     component: Layout,
     redirect: '/nested/menu1',
     name: 'Nested',
@@ -199,6 +202,7 @@ export const constantRoutes = [
   {
     path: 'external-link',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',

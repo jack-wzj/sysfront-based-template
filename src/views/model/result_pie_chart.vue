@@ -1,6 +1,5 @@
 <template>
-  <div :id="id" :class="className" :style="{ height: height, width: width }" />
-</template>
+<div style="text-align: center" :id="id" :class="className" :style="{ height: height, width: width }"></div></template>
 
 <script>
 import * as echarts from "echarts";
@@ -11,11 +10,11 @@ export default {
   props: {
     className: {
       type: String,
-      default: "pcapChart",
+      default: "pieChart",
     },
     id: {
       type: String,
-      default: "pcapChart",
+      default: "pieChart",
     },
     width: {
       type: String,
@@ -30,7 +29,7 @@ export default {
     return {
       files: null,
       dataSize: [],
-      pcapChart: null,
+      pieChart: null,
     };
   },
 
@@ -47,15 +46,14 @@ export default {
     window.Vue = this;
     this.getData();
     this.initChart();
-    this.echartResize();
   },
 
   beforeDestroy() {
-    if (!this.pcapChart) {
+    if (!this.pieChart) {
       return;
     }
-    this.pcapChart.dispose();
-    this.pcapChart = null;
+    this.pieChart.dispose();
+    this.pieChart = null;
   },
 
   methods: {
@@ -106,7 +104,7 @@ export default {
     },
     
     initChart() {
-      this.pcapChart = echarts.init(document.getElementById(this.id));
+      this.pieChart = echarts.init(document.getElementById(this.id));
       var options = {
         // dataset: {
         //   source: this.dataSize,
@@ -120,17 +118,12 @@ export default {
           },
         ],
       };
-      this.pcapChart.setOption(options);
-    },
-    echartResize() {
-      window.addEventListener("resize",() => {
-        this.pcapChart.resize();
-      });
+      this.pieChart.setOption(options);
     },
   },
 };
 
-// window.addEventListener("resize",function() {
-//         this.pcapChart.resize();
-// });
+window.addEventListener("resize",function() {
+        this.pieChart.resize();
+});
 </script>
