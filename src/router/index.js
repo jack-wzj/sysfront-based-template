@@ -99,6 +99,13 @@ export const constantRoutes = [
         component: () => import('@/views/model/show_result'),
         meta: { title: '分类结果', icon: 'eye-open' }
       },
+      {
+        path: 'show-compair-result',
+        name: 'show-compair-result',
+        hidden: true,
+        component: () => import('@/views/model/show_compair_result'),
+        meta: { title: '对比分类结果', icon: 'eye-open' }
+      },
     ]
   },
 
